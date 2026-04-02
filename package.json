@@ -1,9 +1,9 @@
 {
   "name": "meu-servidor-nesting",
-  "version": "2.1.0",
-  "license": "MIT",
+  "version": "3.0.0",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "nesting": "^0.0.1"
   },
   "scripts": {
     "start": "node index.js"
