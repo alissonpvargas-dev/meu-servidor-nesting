@@ -1,13 +1,13 @@
 const express = require('express');
-// Forma mais segura de importar a biblioteca potpack
-const potpack = require('potpack');
+// Ajuste para a nova versão da biblioteca
+const potpack = require('potpack').default || require('potpack');
 
 const app = express();
 const port = process.env.PORT || 10000;
 
 app.use(express.json({ limit: '50mb' }));
 
-app.get('/', (req, res) => res.send('Servidor de Nesting Ativo!'));
+app.get('/', (req, res) => res.send('Servidor de Nesting Corrigido!'));
 
 app.post('/calcular', (req, res) => {
     try {
@@ -17,14 +17,11 @@ app.post('/calcular', (req, res) => {
             return res.status(400).json({ erro: "Dados inválidos" });
         }
 
-        // O potpack precisa que as propriedades sejam exatamente 'w' e 'h'
-        // Ele altera o objeto original adicionando 'x' e 'y'
-        const { w, h } = potpack(objetos);
+        // Executa o cálculo (adiciona x e y em cada objeto da lista)
+        potpack(objetos);
 
         res.json({
             status: "sucesso",
-            largura_total: w,
-            altura_total: h,
             pecas: objetos
         });
     } catch (error) {
