@@ -5,8 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "js-clipper": "^6.4.2"
+    "express": "^4.18.2"
   },
   "scripts": {
     "start": "node index.js"
