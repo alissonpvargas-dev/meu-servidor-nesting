@@ -1,25 +1,18 @@
 const express = require('express');
-const ClipperLib = require('js-clipper');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000; // Porta padrão do Render
 
 app.use(express.json({ limit: '50mb' }));
 
 app.get('/', (req, res) => {
-  res.send('Servidor de Nesting Corrigido e Ativo!');
+  res.send('O SERVIDOR ESTÁ VIVO! Pronto para a Macro do Corel.');
 });
 
 app.post('/calcular', (req, res) => {
-  // Aqui o servidor recebe os pontos do Corel
-  const dados = req.body;
-  
-  // O Clipper será usado aqui no futuro para evitar sobreposição
-  console.log("Dados recebidos para processar com Clipper");
-
+  console.log("Recebendo dados do CorelDRAW...");
   res.json({
-    status: "sucesso",
-    mensagem: "O servidor processou os dados corretamente",
-    resultado: [] 
+    status: "ok",
+    mensagem: "Conexão com o servidor estabelecida com sucesso!"
   });
 });
 
