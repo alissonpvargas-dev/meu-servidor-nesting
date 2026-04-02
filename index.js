@@ -1,30 +1,36 @@
 const express = require('express');
-const potpack = require('potpack'); // Motor de nesting
+// Forma mais segura de importar a biblioteca potpack
+const potpack = require('potpack');
+
 const app = express();
 const port = process.env.PORT || 10000;
 
 app.use(express.json({ limit: '50mb' }));
 
+app.get('/', (req, res) => res.send('Servidor de Nesting Ativo!'));
+
 app.post('/calcular', (req, res) => {
-    const { objetos } = req.body;
-    
-    // Prepara as peças para o motor (w = largura, h = altura)
-    const pecas = objetos.map(obj => ({
-        id: obj.id,
-        w: obj.w,
-        h: obj.h
-    }));
+    try {
+        const { objetos } = req.body;
+        
+        if (!objetos || !Array.isArray(objetos)) {
+            return res.status(400).json({ erro: "Dados inválidos" });
+        }
 
-    // EXECUTA O CÁLCULO DE NESTING
-    const { w, h } = potpack(pecas);
+        // O potpack precisa que as propriedades sejam exatamente 'w' e 'h'
+        // Ele altera o objeto original adicionando 'x' e 'y'
+        const { w, h } = potpack(objetos);
 
-    // Retorna as peças com as novas posições X e Y
-    res.json({
-        status: "sucesso",
-        largura_total: w,
-        altura_total: h,
-        pecas_posicionadas: pecas
-    });
+        res.json({
+            status: "sucesso",
+            largura_total: w,
+            altura_total: h,
+            pecas: objetos
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro no cálculo", detalhes: error.message });
+    }
 });
 
-app.listen(port, () => console.log(`Nesting online na porta ${port}`));
+app.listen(port, () => console.log(`Rodando na porta ${port}`));
