@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Servidor de calculo para CorelDRAW",
   "main": "index.js",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "svgnest": "^0.1.10"
+    "js-clipper": "^6.4.2"
   },
   "scripts": {
     "start": "node index.js"
