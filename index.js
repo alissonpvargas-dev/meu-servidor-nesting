@@ -2,22 +2,21 @@ const express = require('express');
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
-app.post('/nesting-complexo', (req, res) => {
-    try {
-        const { pecas } = req.body;
-        // Lógica de encaixe simplificada para evitar erros de biblioteca
-        // Aqui o servidor organiza as peças baseando-se nos pontos enviados
-        let cursorX = 0;
-        let resultado = pecas.map(p => {
-            const novaPos = { id: p.id, x: cursorX, y: 0 };
-            cursorX += p.w + 2; // Adiciona 2mm de margem
-            return novaPos;
-        });
+app.post('/calcular', (req, res) => {
+    const { objetos } = req.body;
+    let cursorX = 0;
+    
+    // Algoritmo de Encaixe por Contorno (Simplificado)
+    const resultado = objetos.map(obj => {
+        // Para estrelas, o segredo é o recuo (overlap)
+        // Reduzimos o avanço do cursor em 30% para as pontas se entrelaçarem
+        const avanco = obj.w * 0.75; 
+        const novaPos = { id: obj.id, x: cursorX, y: 0 };
+        cursorX += avanco;
+        return novaPos;
+    });
 
-        res.json({ status: "sucesso", posicoes: resultado });
-    } catch (e) {
-        res.status(500).send(e.message);
-    }
+    res.json({ status: "sucesso", pecas: resultado });
 });
 
 app.listen(process.env.PORT || 10000);
