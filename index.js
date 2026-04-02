@@ -1,33 +1,24 @@
 const express = require('express');
-// Ajuste para a nova versão da biblioteca
-const potpack = require('potpack').default || require('potpack');
-
+const svgNest = require('svg-nest');
 const app = express();
-const port = process.env.PORT || 10000;
 
-app.use(express.json({ limit: '50mb' }));
+app.use(express.text({ type: 'image/svg+xml', limit: '50mb' }));
 
-app.get('/', (req, res) => res.send('Servidor de Nesting Corrigido!'));
+app.post('/nesting-complexo', (req, res) => {
+    const svgData = req.body; // O Corel enviará o SVG aqui
+    
+    // Configurações do aninhamento
+    const config = {
+        iterations: 10,
+        spacer: 2, // Espaço entre as peças em mm
+        curveTolerance: 0.3
+    };
 
-app.post('/calcular', (req, res) => {
-    try {
-        const { objetos } = req.body;
-        
-        if (!objetos || !Array.isArray(objetos)) {
-            return res.status(400).json({ erro: "Dados inválidos" });
-        }
-
-        // Executa o cálculo (adiciona x e y em cada objeto da lista)
-        potpack(objetos);
-
-        res.json({
-            status: "sucesso",
-            pecas: objetos
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Erro no cálculo", detalhes: error.message });
-    }
+    // O motor calcula o encaixe das formas reais
+    svgNest.nest(svgData, config, (result) => {
+        res.header("Content-Type", "image/svg+xml");
+        res.send(result); // Devolve o SVG com as estrelas encaixadas
+    });
 });
 
-app.listen(port, () => console.log(`Rodando na porta ${port}`));
+app.listen(process.env.PORT || 10000);
