@@ -15,11 +15,10 @@ app.post('/calcular', (req, res) => {
         const resultado = objetos.map((obj, index) => {
             // Se a peça ultrapassar a largura, pula linha
             if (cursorX + obj.w > LARGURA_CHAPA) {
-                cursorX = 0;
-                cursorY += maxH_na_linha * 0.75; // Encaixa verticalmente
-                maxH_na_linha = 0;
+                 cursorX = 0;
+                 cursorY += maxH_na_linha * 0.95; // Aumentamos de 0.75 para 0.95 (evita sobrepor vertical)
+                 maxH_na_linha = 0;
             }
-
             // Lógica de "Beijo das Estrelas": uma em pé (0°) e uma invertida (180°)
             // Isso permite que as pontas se entrelacem perfeitamente
             const rotacao = (index % 2 === 0) ? 0 : 180;
@@ -32,7 +31,7 @@ app.post('/calcular', (req, res) => {
             };
 
             // Fator de Entrelaçamento: 0.7 (faz as pontas entrarem 30% uma na outra)
-            cursorX += obj.w * 0.72; 
+            cursorX += obj.w * 0.88; // Aumentamos de 0.72 para 0.88 (evita sobrepor horizontal) 
             if (obj.h > maxH_na_linha) maxH_na_linha = obj.h;
 
             return novaPos;
