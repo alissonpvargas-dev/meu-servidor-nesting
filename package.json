@@ -1,9 +1,9 @@
 {
   "name": "meu-servidor-nesting",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "dependencies": {
     "express": "^4.18.2",
-    "polygon-clipping": "^0.15.3"
+    "js-clipper": "^6.4.2"
   },
   "scripts": {
     "start": "node index.js"
