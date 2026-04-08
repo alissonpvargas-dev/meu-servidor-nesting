@@ -5,37 +5,36 @@ app.use(express.json({ limit: '50mb' }));
 app.post('/calcular', (req, res) => {
     try {
         const { objetos, larguraChapa, distancia } = req.body;
-        let cursorX = 0;
-        let cursorY = 0;
-        let maxH_na_linha = 0;
-        let ultimaPecaW = 0;
+        let cursorX = 0, cursorY = 0, maxH_na_linha = 0;
+        let larguraUltima = 0;
 
-        // Ordenação por Área (Peças grandes primeiro criam a estrutura, pequenas preenchem)
-        const pecas = objetos.sort((a, b) => (b.w * b.h) - (a.w * a.h));
+        // Ordenar por ALTURA (crucial para o setor têxtil/vestuário)
+        const pecas = objetos.sort((a, b) => b.h - a.h);
 
         const resultado = pecas.map((obj, index) => {
-            // Se a largura estourar, pula linha
             if (cursorX + obj.w > larguraChapa) {
                 cursorX = 0;
                 cursorY += maxH_na_linha + distancia;
                 maxH_na_linha = 0;
-                ultimaPecaW = 0;
+                larguraUltima = 0;
             }
 
-            // Lógica de Encaixe Dinâmico: 
-            // Calcula o recuo baseado na média das larguras para permitir o entrelaçamento
-            const recuo = (ultimaPecaW > 0) ? Math.min(ultimaPecaW, obj.w) * 0.35 : 0;
-            
+            // Lógica de Encaixe de Curvas:
+            // Se a peça atual for menor ou similar à anterior, permite um encaixe de até 40%
+            let encaixeEfetivo = 0;
+            if (larguraUltima > 0) {
+                encaixeEfetivo = Math.min(obj.w, larguraUltima) * 0.42;
+            }
+
             const novaPos = { 
                 id: obj.id, 
-                x: cursorX - recuo, 
+                x: cursorX - encaixeEfetivo, 
                 y: cursorY, 
                 rot: (index % 2 === 0) ? 0 : 180 
             };
 
-            // Atualiza cursores
-            cursorX += (obj.w - recuo) + distancia;
-            ultimaPecaW = obj.w;
+            cursorX += (obj.w - encaixeEfetivo) + distancia;
+            larguraUltima = obj.w;
             if (obj.h > maxH_na_linha) maxH_na_linha = obj.h;
 
             return novaPos;
