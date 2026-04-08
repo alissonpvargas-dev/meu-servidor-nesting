@@ -7,7 +7,7 @@ app.post('/calcular', (req, res) => {
     let cursorX = 0;
     let cursorY = 0;
     let maxH_na_linha = 0;
-    const LARGURA_CHAPA = 1000; // mm (ajustável)
+    const LARGURA_CHAPA = 1570; // mm (ajustável)
 
     const resultado = objetos.map((obj, index) => {
         // Pula linha se estourar a largura
