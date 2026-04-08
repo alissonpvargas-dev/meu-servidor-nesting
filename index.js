@@ -31,7 +31,7 @@ app.post('/calcular', (req, res) => {
             };
 
             // Fator de Entrelaçamento: 0.7 (faz as pontas entrarem 30% uma na outra)
-            cursorX += obj.w * 0.92; // Aumentamos de 0.72 para 0.88 (evita sobrepor horizontal) 
+            cursorX += obj.w * 0.88; // Aumentamos de 0.72 para 0.88 (evita sobrepor horizontal) 
             if (obj.h > maxH_na_linha) maxH_na_linha = obj.h;
 
             return novaPos;
